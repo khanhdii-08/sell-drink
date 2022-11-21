@@ -11,32 +11,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ProductService.Service.WatterService;
-import com.example.ProductService.entity.Watter;
+import com.example.ProductService.Service.WaterService;
+import com.example.ProductService.entity.Water;
 
 @RestController
-@RequestMapping("api/watters")
+@RequestMapping("api/waters")
 public class WatterController {
 	
 	@Autowired
-	private WatterService watterService;
+	private WaterService waterService;
 	
 	@GetMapping()
-	public List<Watter> getAllWatter(){
-		return watterService.getAllWatter();
+	public List<Water> getAllWatter(){
+		return waterService.getAllWatter();
 	}
 	@GetMapping("/{id}")
-	public Watter getOnWatter(@PathVariable Long id) {
-		return watterService.getOneWatter(id);
+	public Water getOnWatter(@PathVariable Long id) {
+		return waterService.getOneWatter(id);
 	}
 	@PostMapping
-	public Watter addOrUpdateWatter(@RequestBody Watter watter) {
-		return watterService.addOrUppdateWatter(watter);
+	public Water addOrUpdateWatter(@RequestBody Water watter) {
+		return waterService.addOrUppdateWatter(watter);
 		
 	}
 	@DeleteMapping("/{id}")
 	public boolean deleteWatter(@PathVariable Long id) {
-		boolean check = watterService.deleteWate(id);
+		boolean check = waterService.deleteWate(id);
 		return check;
 	}
 

@@ -20,13 +20,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.ProductService.entity.Watter;
+import com.example.ProductService.entity.Water;
 import com.example.ProductService.repository.WatterRepository;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
-public class WatterServiceImp implements WatterService, UserDetailsService {
+public class WaterServiceImp implements WaterService, UserDetailsService {
 	
 	@Autowired
 	private WatterRepository watterRepository;
@@ -35,19 +35,19 @@ public class WatterServiceImp implements WatterService, UserDetailsService {
 	private RestTemplate restTemplate;
 
 	@Override
-	public Watter getOneWatter(Long id) {
+	public Water getOneWatter(Long id) {
 		// TODO Auto-generated method stub
 		return watterRepository.findById(id).get();
 	}
 
 	@Override
-	public List<Watter> getAllWatter() {
+	public List<Water> getAllWatter() {
 		// TODO Auto-generated method stub
 		return watterRepository.findAll();
 	}
 
 	@Override
-	public Watter addOrUppdateWatter(Watter watter) {
+	public Water addOrUppdateWatter(Water watter) {
 		// TODO Auto-generated method stub
 		return watterRepository.save(watter);
 	}
@@ -55,7 +55,7 @@ public class WatterServiceImp implements WatterService, UserDetailsService {
 	@Override
 	public boolean deleteWate(Long id) {
 		// TODO Auto-generated method stub
-		Watter wt = watterRepository.findById(id).get();
+		Water wt = watterRepository.findById(id).get();
 		if(wt != null) {
 			watterRepository.deleteById(id);
 			return true;

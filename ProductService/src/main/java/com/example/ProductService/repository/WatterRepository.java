@@ -3,9 +3,9 @@ package com.example.ProductService.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.ProductService.entity.Watter;
+import com.example.ProductService.entity.Water;
 
 @Repository
-public interface WatterRepository extends JpaRepository<Watter, Long>{
+public interface WatterRepository extends JpaRepository<Water, Long>{
 
 }
