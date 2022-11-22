@@ -32,7 +32,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class CartServiceImpl implements CartService, UserDetailsService {
+public class CartServiceImpl implements CartService {
 	@Autowired
 	private CartRepository cartRepository;
 	@Autowired
@@ -100,14 +100,9 @@ public class CartServiceImpl implements CartService, UserDetailsService {
 	}
 
 	@Override
-	public boolean removeItems(List<CartItem> items) {
+	public boolean removeItems(Long cartId) {
 		try {
-			items.stream().forEach(i -> {
-				System.out.println(i.getCart().getId());
-				System.out.println(i.getProductId());
-
-				itemRepository.deleteById(new CartItemPK(i.getCart().getId(), i.getProductId()));
-			});
+			itemRepository.deleteAllByCartId(cartId);
 			return true;
 		}catch (Exception e){
 			System.out.println(e);
@@ -144,28 +139,4 @@ public class CartServiceImpl implements CartService, UserDetailsService {
 	}
 
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-		UserDto userDto = restTemplate.exchange("http://localhost:8001".concat("/api/user/").concat(String.valueOf(username)),
-				HttpMethod.GET,
-				entity,
-				UserDto.class
-		).getBody();
-
-
-		if(userDto == null){
-			throw new UsernameNotFoundException("User not found in the database");
-		}
-
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		userDto.getRoles().forEach(role -> {
-			authorities.add(new SimpleGrantedAuthority(role.getName()));
-		});
-		return new org.springframework.security.core.userdetails.User(userDto.getUsername(), userDto.getPassword(), authorities);
-
-	}
 }

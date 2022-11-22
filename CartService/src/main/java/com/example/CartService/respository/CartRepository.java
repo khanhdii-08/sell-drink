@@ -9,4 +9,5 @@ import com.example.CartService.entity.Cart;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long>{
 	public Cart findByUserId(Long userId);
+
 }

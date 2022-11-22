@@ -31,7 +31,7 @@ public class Cart {
 	private double totalPrice;
 	@JsonManagedReference
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CartItem> items;
+	private List<CartItem> cartItems;
 	
 
 }
