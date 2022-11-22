@@ -13,14 +13,4 @@ public class ProductServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProductServiceApplication.class, args);
 	}
-
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public RestTemplate restTemplate(){
-		return new RestTemplate();
-	}
 }

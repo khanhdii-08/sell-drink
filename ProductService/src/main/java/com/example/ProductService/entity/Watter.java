@@ -18,7 +18,7 @@ import lombok.Setter;
 @Table(name = "watters")
 @Getter
 @Setter
-public class Water {
+public class Watter {
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long id;
