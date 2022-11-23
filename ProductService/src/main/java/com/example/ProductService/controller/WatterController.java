@@ -7,45 +7,45 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.ProductService.service.WatterService;
-import com.example.ProductService.entity.Watter;
+import com.example.ProductService.service.WaterService;
+import com.example.ProductService.entity.Water;
 
 @RestController
-@RequestMapping("api/watters")
+@RequestMapping("/v1/api/waters")
 public class WatterController {
 	
 	@Autowired
-	private WatterService watterService;
+	private WaterService waterService;
 	
 	@GetMapping()
-	public List<Watter> getAllWatter(){
-		return watterService.getAllWatter();
+	public List<Water> getAllWatter(){
+		return waterService.getAllWatter();
 	}
 
 	@GetMapping("/{id}")
-	public Watter getOnWatter(@PathVariable Long id) {
-		return watterService.getOneWatter(id);
+	public Water getOnWatter(@PathVariable Long id) {
+		return waterService.getOneWatter(id);
 	}
 
 	@PostMapping
-	public Watter addOrUpdateWatter(@RequestBody Watter watter) {
-		return watterService.addOrUppdateWatter(watter);
+	public Water addOrUpdateWatter(@RequestBody Water water) {
+		return waterService.addOrUppdateWatter(water);
 		
 	}
 	@DeleteMapping("/{id}")
 	public boolean deleteWatter(@PathVariable Long id) {
-		boolean check = watterService.deleteWate(id);
+		boolean check = waterService.deleteWate(id);
 		return check;
 	}
 
 	@PostMapping("/ids")
-	public List<Watter> getAllWaterByIds(@RequestBody List<Long> ids){
-		return watterService.findByListId(ids);
+	public List<Water> getAllWaterByIds(@RequestBody List<Long> ids){
+		return waterService.findByListId(ids);
 	}
 
 	@PutMapping
-	public boolean addOrUpdatePizza(@RequestBody List<Watter> listUpdate) {
-		if(watterService.updateWaters(listUpdate).size() > 0)
+	public boolean addOrUpdatePizza(@RequestBody List<Water> listUpdate) {
+		if(waterService.updateWaters(listUpdate).size() > 0)
 			return true;
 		return false;
 	}

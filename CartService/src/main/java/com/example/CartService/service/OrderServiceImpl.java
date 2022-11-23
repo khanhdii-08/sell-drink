@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService{
         Gson gson = new Gson();
         HttpEntity<String> water = new HttpEntity<String>(gson.toJson(ids),headers);
 
-        WaterDto[] dtoArray= restTemplate.postForObject("http://localhost:4000/api/watters/ids", water, WaterDto[].class);
+        WaterDto[] dtoArray= restTemplate.postForObject("http://localhost:4000/v1/api/waters/ids", water, WaterDto[].class);
         List<WaterDto> result = Arrays.asList(dtoArray);
         return result;
     }
@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService{
         headers.add("Authorization", "Bearer " + JwtTokenProvider.tokenJwt());
         HttpEntity<List<WaterDto>> waters = new HttpEntity<List<WaterDto>>(waterDtos,headers);
         try {
-            restTemplate.put("http://localhost:4000/api/watters", waters, WaterDto[].class);
+            restTemplate.put("http://localhost:4000/v1/api/waters", waters, WaterDto[].class);
             return true;
         } catch (Exception e) {
             System.out.println(e);

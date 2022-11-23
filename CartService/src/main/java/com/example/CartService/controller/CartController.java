@@ -11,6 +11,11 @@ import com.example.CartService.entity.Order;
 import com.example.CartService.respository.CartItemRepository;
 import com.example.CartService.service.OrderService;
 import com.example.CartService.utils.JwtTokenProvider;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 
@@ -23,6 +28,9 @@ import com.example.CartService.service.CartService;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,10 +38,11 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/v2/api")
 public class CartController {
 	@Autowired
 	CartService cartService;
+	int count =0;
 
 	@Autowired
 	private CartItemRepository itemRepository;
@@ -45,6 +54,7 @@ public class CartController {
 
 	@GetMapping("/carts")
 	public ResponseEntity<Cart> getCartByUserId( HttpServletRequest request) {
+		
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -71,7 +81,18 @@ public class CartController {
 	}
 	
 	@PostMapping("/carts/items")
-	public ResponseEntity<CartItem> saveOrUpdate(@RequestBody CartItemDto cartItemDto, HttpServletRequest request) throws Exception {
+	@Retry(name = "water")
+	public ResponseEntity<CartItem> saveOrUpdate(@RequestBody CartItemDto cartItemDto) throws Exception {
+		System.out.println("retry "+ (count++));
+		try {
+	        System.out.println("time retry "+ Thread.currentThread().getName() + "...running  " +
+	                LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+	        
+	    } catch (Exception e){
+	    	System.out.println("test");
+	        System.out.println(e.getLocalizedMessage());
+	    }
+
 
 		CartItem cartItem = null;
 
@@ -89,13 +110,8 @@ public class CartController {
 		Cart cart = cartService.getCartByUserId(userDto.getId());
 
 		if(cart != null) {
-			try {
 				CartItem itemNew = new CartItem(cart, cartItemDto.getProductId(), cartItemDto.getQuantity());
 				cartItem = cartService.saveItem(itemNew);
-			}catch (Exception e){
-				System.out.println(e);
-			}
-
 		}
 		else {
 
@@ -137,6 +153,7 @@ public class CartController {
 	}
 
 	@DeleteMapping("/carts/items")
+	@CircuitBreaker(name = "water")
 	public Cart removeItems(){
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -152,7 +169,6 @@ public class CartController {
 		Cart cart = cartService.getCartByUserId(userDto.getId());
 		List<CartItem> items = cart.getCartItems();
 		if(!items.isEmpty()){
-			System.out.println("duy : " + cart.getId());
 			cartService.removeItems(cart.getId());
 			cart.setTotalPrice(0);
 			cartService.saveCart(cart);
@@ -163,6 +179,7 @@ public class CartController {
 	}
 
 	@PostMapping("/orders")
+	@RateLimiter(name = "water")
 	public Order orderWater() throws Exception {
 
 		HttpHeaders headers = new HttpHeaders();

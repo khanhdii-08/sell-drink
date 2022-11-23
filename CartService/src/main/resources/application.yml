@@ -1,0 +1,44 @@
+spring:
+ application:
+  name: CART-SERVICE
+ config:
+  import:optional:configserver:
+ cloud:
+  config:
+   uri: http://localhost:8888
+   
+resilience4j.retry:
+    instances:
+        water:
+            registerHealthIndicator: true
+            maxAttempts: 10
+            waitDuration: 10s
+            
+resilience4j.circuitbreaker:
+  instances:
+    water:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      slidingWindowType: TIME_BASED
+      permittedNumberOfCallsInHalfOpenState: 3
+      failureRateThreshold: 70
+      minimumNumberOfCalls: 5
+      waitDurationInOpenState: 5s
+      slowCallRateThreshold: 50
+      slowCallDurationThreshold: 2000
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+            
+resilience4j.ratelimiter:
+  instances:
+    water:
+      limitRefreshPeriod: 24s
+      limitForPeriod: 5
+      timeoutDuration: 20s
+      registerHealthIndicator: true        
+            
+management:
+  endpoint:
+    health:
+      show-details: always         #To show all details in /health endpoint.
+
+management.health.circuitbreakers.enabled: true

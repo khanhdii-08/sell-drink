@@ -54,7 +54,7 @@ public class CartServiceImpl implements CartService {
 		headers.add("Authorization","Bearer " + JwtTokenProvider.tokenJwt());
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-		WaterDto waterDto = restTemplate.exchange("http://localhost:4000".concat("/api/watters/").concat(String.valueOf(cartItem.getProductId())),
+		WaterDto waterDto = restTemplate.exchange("http://localhost:4000".concat("/v1/api/waters/").concat(String.valueOf(cartItem.getProductId())),
 				HttpMethod.GET,
 				entity,
 				WaterDto.class

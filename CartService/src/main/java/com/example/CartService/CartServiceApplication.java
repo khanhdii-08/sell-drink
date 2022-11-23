@@ -13,10 +13,6 @@ public class CartServiceApplication {
 		SpringApplication.run(CartServiceApplication.class, args);
 	}
 
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
 
 	@Bean
 	public RestTemplate restTemplate(){
