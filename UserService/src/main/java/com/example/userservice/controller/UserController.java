@@ -33,7 +33,6 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('')")
     public List<User> getUsers(){
         return userService.getUsers();
     }

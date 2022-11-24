@@ -6,6 +6,7 @@ import com.example.userservice.repository.RoleRepository;
 import com.example.userservice.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +23,10 @@ import java.util.List;
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    private static final String REDIS_CACHE_USER = "user";
+
+    private static final String REDIS_CACHE_ROLE = "role";
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -29,10 +34,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = null;
+        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
+        if(user != null){
+            System.out.println("get user from redis");
+        }else {
+            System.out.println("get user from db");
+            user = userRepository.findByUsername(username);
+            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
+        }
+
         if(user == null){
             throw new UsernameNotFoundException("User not found in the database");
         }
@@ -47,24 +64,56 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
         return userRepository.save(user);
     }
 
     @Override
     public Role saveRole(Role role) {
+        redisTemplate.opsForHash().put(REDIS_CACHE_ROLE, role.getName(), role);
         return roleRepository.save(role);
     }
 
     @Override
     public void addRoleToUser(String username, String roleName) {
-        User user = userRepository.findByUsername(username);
-        Role role = roleRepository.findByName(roleName);
+
+        User user = null;
+        Role role = null;
+
+        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
+        if(user != null){
+            System.out.println("get user from redis");
+        }else {
+            System.out.println("get user from db");
+            user = userRepository.findByUsername(username);
+            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
+        }
+
+        role = (Role) redisTemplate.opsForHash().get(REDIS_CACHE_ROLE, roleName);
+        if(role != null){
+            System.out.println("get role from redis");
+        }else {
+            System.out.println("get role from db");
+            role = roleRepository.findByName(roleName);
+            redisTemplate.opsForHash().put(REDIS_CACHE_ROLE, role.getName(), role);
+        }
         user.getRoles().add(role);
     }
 
     @Override
     public User getUser(String username) {
-        return userRepository.findByUsername(username);
+        User user = null;
+
+        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
+        if(user != null){
+            System.out.println("get user from redis");
+        }else {
+            System.out.println("get user from db");
+            user = userRepository.findByUsername(username);
+            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
+        }
+
+        return user;
     }
 
     @Override
