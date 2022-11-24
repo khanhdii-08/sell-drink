@@ -1,3 +1,7 @@
+app:
+  host-auth: localhost
+  host-discovery: localhost
+
 spring:
  application:
   name: PRODUCT-SERVICE
@@ -5,4 +9,4 @@ spring:
   import:optional:configserver:
  cloud:
   config:
-   uri: http://localhost:8888
+   uri: http://${app.host-config}:8888

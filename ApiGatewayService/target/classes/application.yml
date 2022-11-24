@@ -1,6 +1,8 @@
 
 server:
  port: 9191
+ 
+
 spring:
  config:
   import: "optional:configserver:"
@@ -8,19 +10,19 @@ spring:
   name: API-GATEWAY
  cloud:
   config:
-   uri: http://localhost:8888
+  uri: http://${app.host-config}:8888
   gateway:
    routes:
    - id: UserService
-     uri: http://localhost:8001/
+     uri: http://${app.host-config}:8001/
      predicates:
      - Path=/api/**
    - id: ProductService
-     uri: http://localhost:4000/
+     uri: http://${app.host-config}:4000/
      predicates:
      - Path=/v1/api/waters/**
    - id: CartService
-     uri: http://localhost:8000/
+     uri: http://${app.host-config}:8000/
      predicates:
      - Path=/v2/api/**
  

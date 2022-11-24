@@ -1,3 +1,7 @@
+app:
+  host-product: localhost
+  host-discovery: localhost
+
 spring:
  application:
   name: CART-SERVICE
@@ -5,8 +9,11 @@ spring:
   import:optional:configserver:
  cloud:
   config:
-   uri: http://localhost:8888
-   
+   uri: http://${app.host-config}:8888
+
+
+
+
 resilience4j.retry:
     instances:
         water:

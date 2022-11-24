@@ -10,6 +10,7 @@ import com.example.CartService.dto.UserDto;
 import com.example.CartService.dto.WaterDto;
 import com.example.CartService.utils.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -46,6 +47,9 @@ public class CartServiceImpl implements CartService {
 		// TODO Auto-generated method stub
 		return cartRepository.saveAndFlush(cart);
 	}
+	@Value("${app.host-product}")
+	public String hostProduct;
+
 	@Override
 	public CartItem saveItem(CartItem cartItem) throws Exception {
 
@@ -54,7 +58,7 @@ public class CartServiceImpl implements CartService {
 		headers.add("Authorization","Bearer " + JwtTokenProvider.tokenJwt());
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-		WaterDto waterDto = restTemplate.exchange("http://localhost:4000".concat("/v1/api/waters/").concat(String.valueOf(cartItem.getProductId())),
+		WaterDto waterDto = restTemplate.exchange("http://"+hostProduct+":4000".concat("/v1/api/waters/").concat(String.valueOf(cartItem.getProductId())),
 				HttpMethod.GET,
 				entity,
 				WaterDto.class

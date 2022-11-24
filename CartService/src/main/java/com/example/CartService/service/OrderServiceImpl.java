@@ -9,6 +9,7 @@ import com.example.CartService.respository.OrderRepository;
 import com.example.CartService.utils.JwtTokenProvider;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -34,7 +35,8 @@ public class OrderServiceImpl implements OrderService{
     private OrderDetailRepository orderDetailRepository;
     @Autowired
     private RestTemplate restTemplate;
-
+    @Value("${app.host-product}")
+	public String hostProduct;
 
     @Override
     public Order addOrder(Cart cart) throws Exception {
@@ -103,7 +105,7 @@ public class OrderServiceImpl implements OrderService{
         Gson gson = new Gson();
         HttpEntity<String> water = new HttpEntity<String>(gson.toJson(ids),headers);
 
-        WaterDto[] dtoArray= restTemplate.postForObject("http://localhost:4000/v1/api/waters/ids", water, WaterDto[].class);
+        WaterDto[] dtoArray= restTemplate.postForObject("http://"+hostProduct+":4000/v1/api/waters/ids", water, WaterDto[].class);
         List<WaterDto> result = Arrays.asList(dtoArray);
         return result;
     }
@@ -116,7 +118,7 @@ public class OrderServiceImpl implements OrderService{
         headers.add("Authorization", "Bearer " + JwtTokenProvider.tokenJwt());
         HttpEntity<List<WaterDto>> waters = new HttpEntity<List<WaterDto>>(waterDtos,headers);
         try {
-            restTemplate.put("http://localhost:4000/v1/api/waters", waters, WaterDto[].class);
+            restTemplate.put("http://"+hostProduct+":4000/v1/api/waters", waters, WaterDto[].class);
             return true;
         } catch (Exception e) {
             System.out.println(e);
