@@ -35,7 +35,7 @@ services:
         volumes:
             - gateway:/usr/src/myapp
         ports:
-            - 9191:9191
+            - 9190:9191
         restart: always
         depends_on:
             discover:
@@ -46,6 +46,10 @@ services:
 
         environment:
             - eureka.client.serviceUrl.defaultZone=http://discover:8761/eureka/
+            - app_host-user=user
+            - app_host-product=product
+            - app_host-cart=cart
+            
            
     user:
         build: ./UserService/
@@ -56,7 +60,7 @@ services:
         restart: always
         depends_on:
             mysql:
-                condition: service_healthy
+                condition: service_started
 
             discover:
                 condition: service_healthy
@@ -84,7 +88,7 @@ services:
         restart: always
         depends_on:
             mysql:
-                condition: service_healthy
+                condition: service_started
             discover:
                 condition: service_healthy
 
@@ -106,7 +110,7 @@ services:
         restart: always
         depends_on:
             mysql:
-                condition: service_healthy
+                condition: service_started
             discover:
                 condition: service_healthy
 

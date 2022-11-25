@@ -1,0 +1,12 @@
+app:
+  host-auth: localhost
+  host-discovery: localhost
+
+spring:
+ application:
+  name: USER-SERVICE
+ config:
+  import:optional:configserver:
+ cloud:
+  config:
+   uri: http://${app.host-config}:8888

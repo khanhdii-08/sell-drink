@@ -10,19 +10,19 @@ spring:
   name: API-GATEWAY
  cloud:
   config:
-  uri: http://${app.host-config}:8888
+   uri: http://${app.host-config}:8888
   gateway:
    routes:
    - id: UserService
-     uri: http://${app.host-config}:8001/
+     uri: lb://USER-SERVICE
      predicates:
      - Path=/api/**
    - id: ProductService
-     uri: http://${app.host-config}:4000/
+     uri: lb://PRODUCT-SERVICE
      predicates:
      - Path=/v1/api/waters/**
    - id: CartService
-     uri: http://${app.host-config}:8000/
+     uri: lb://CART-SERVICE
      predicates:
      - Path=/v2/api/**
  
