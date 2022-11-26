@@ -17,7 +17,6 @@ spring:
 resilience4j.retry:
     instances:
         water:
-            registerHealthIndicator: true
             maxAttempts: 10
             waitDuration: 10s
             
@@ -26,13 +25,12 @@ resilience4j.circuitbreaker:
     water:
       registerHealthIndicator: true
       slidingWindowSize: 10
-      slidingWindowType: TIME_BASED
+      slidingWindowType: COUNT_BASED
       permittedNumberOfCallsInHalfOpenState: 3
       failureRateThreshold: 70
-      minimumNumberOfCalls: 5
       waitDurationInOpenState: 5s
       slowCallRateThreshold: 50
-      slowCallDurationThreshold: 2000
+      slowCallDurationThreshold: 5000
       automaticTransitionFromOpenToHalfOpenEnabled: true
             
 resilience4j.ratelimiter:

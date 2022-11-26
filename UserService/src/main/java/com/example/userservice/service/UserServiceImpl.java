@@ -64,56 +64,61 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
+//        redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
         return userRepository.save(user);
     }
 
     @Override
     public Role saveRole(Role role) {
-        redisTemplate.opsForHash().put(REDIS_CACHE_ROLE, role.getName(), role);
+//        redisTemplate.opsForHash().put(REDIS_CACHE_ROLE, role.getName(), role);
         return roleRepository.save(role);
     }
 
     @Override
     public void addRoleToUser(String username, String roleName) {
 
-        User user = null;
-        Role role = null;
-
-        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
-        if(user != null){
-            System.out.println("get user from redis");
-        }else {
-            System.out.println("get user from db");
-            user = userRepository.findByUsername(username);
-            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
-        }
-
-        role = (Role) redisTemplate.opsForHash().get(REDIS_CACHE_ROLE, roleName);
-        if(role != null){
-            System.out.println("get role from redis");
-        }else {
-            System.out.println("get role from db");
-            role = roleRepository.findByName(roleName);
-            redisTemplate.opsForHash().put(REDIS_CACHE_ROLE, role.getName(), role);
-        }
+        User user = userRepository.findByUsername(username);
+        Role role = roleRepository.findByName(roleName);
         user.getRoles().add(role);
+
+//        User user = null;
+//        Role role = null;
+//
+//        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
+//        if(user != null){
+//            System.out.println("get user from redis");
+//        }else {
+//            System.out.println("get user from db");
+//            user = userRepository.findByUsername(username);
+//            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
+//        }
+//
+//        role = (Role) redisTemplate.opsForHash().get(REDIS_CACHE_ROLE, roleName);
+//        if(role != null){
+//            System.out.println("get role from redis");
+//        }else {
+//            System.out.println("get role from db");
+//            role = roleRepository.findByName(roleName);
+//            redisTemplate.opsForHash().put(REDIS_CACHE_ROLE, role.getName(), role);
+//        }
+//
+//        user.getRoles().add(role);
     }
 
     @Override
     public User getUser(String username) {
-        User user = null;
+//        User user = null;
+//
+//        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
+//        if(user != null){
+//            System.out.println("get user from redis");
+//        }else {
+//            System.out.println("get user from db");
+//            user = userRepository.findByUsername(username);
+//            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
+//        }
 
-        user = (User) redisTemplate.opsForHash().get(REDIS_CACHE_USER, username);
-        if(user != null){
-            System.out.println("get user from redis");
-        }else {
-            System.out.println("get user from db");
-            user = userRepository.findByUsername(username);
-            redisTemplate.opsForHash().put(REDIS_CACHE_USER, user.getUsername(), user);
-        }
-
-        return user;
+        return userRepository.findByUsername(username);
     }
 
     @Override

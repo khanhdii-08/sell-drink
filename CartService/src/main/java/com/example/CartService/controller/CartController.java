@@ -53,9 +53,8 @@ public class CartController {
 	private RestTemplate restTemplate;
 
 	@GetMapping("/carts")
+	@RateLimiter(name = "water")
 	public ResponseEntity<Cart> getCartByUserId( HttpServletRequest request) {
-		
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.add("Authorization","Bearer " + JwtTokenProvider.tokenJwt());
@@ -81,7 +80,8 @@ public class CartController {
 	}
 	
 	@PostMapping("/carts/items")
-	@Retry(name = "water")
+//	@Retry(name = "water")
+	@CircuitBreaker(name = "water")
 	public ResponseEntity<CartItem> saveOrUpdate(@RequestBody CartItemDto cartItemDto) throws Exception {
 		System.out.println("retry "+ (count++));
 		try {
