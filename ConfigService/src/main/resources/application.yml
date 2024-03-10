@@ -7,6 +7,10 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/hoanghuy1801/cloud-config-server
-          default-label: master
-        bootstrap: false
+          uri: https://github.com/khanhdii-08/cloud-config-server
+          default-label: main
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
